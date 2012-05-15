@@ -152,6 +152,10 @@ typeset_functions ()
     typeset x ans
     typeset this=$(for x in $(ps -p $$); do ans=$x; done; printf "%s\n" $ans | sed 's/^-*//')
     typeset shell=$(basename $this)  # e.g. /bin/bash => bash
+    if [ "$BASH_IT" ]; then
+        # Assume since we're inside bash-it, that we're in a bash shell
+        shell="bash"
+    fi
     case "$shell" in
         bash)
             typeset -F | awk '{print $3}'
