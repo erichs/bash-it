@@ -35,6 +35,7 @@ alias-help ()
     param '1: optional alias group'
     example '$ alias-help'
     example '$ alias-help git'
+    group 'lib'
 
     if [ -n "$1" ]; then
         cat $BASH_IT/aliases/enabled/$1.aliases.bash | metafor alias | sed "s/$/'/"
@@ -48,4 +49,27 @@ alias-help ()
             cat $f | metafor alias | sed "s/$/'/"
         done
     fi
+}
+
+bash-it-aliases ()
+{
+    about 'summarizes available bash_it aliases'
+    group 'lib'
+
+    typeset f
+    typeset enabled
+    printf "%-20s%-10s%s\n" 'Alias' 'Enabled?' 'Description'
+    for f in $BASH_IT/aliases/available/*.bash
+    do
+        if [ -e $BASH_IT/aliases/enabled/$(basename $f) ]; then
+            enabled='x'
+        else
+            enabled=' '
+        fi
+        printf "%-20s%-10s%s\n" "$(basename $f | cut -d'.' -f1)" "  [$enabled]" "$(cat $f | metafor about-aliases)"
+    done
+    printf '\n%s\n' 'to enable an alias group, do:'
+    printf '%s\n' '$ enable-alias  <alias group> -or- $ enable-alias all'
+    printf '\n%s\n' 'to disable an alias group, do:'
+    printf '%s\n' '$ disable-alias <alias group> -or- $ disable-alias all'
 }
